@@ -2,6 +2,8 @@
 
 **Two companies. Two chat apps. Two AI agents. Nothing reaches production until both turn their key.**
 
+TwoKey is change approval between companies, for the age of AI agents. An outage is the example here, but the gate is the point: any time one company's agent needs to change something in another company's system, a person on each side approves the exact change, and that approval is a real signature.
+
 ![The TwoKey board after both keys were turned](docs/two-keys.png)
 
 **Demo video:** VIDEO_LINK
@@ -32,6 +34,17 @@ TwoKey puts each company's agent in its own company's chat, and lets those agent
 8. Both signatures verify, the patch applies, quotes recover, and the agent posts the incident record.
 
 ![How a change crosses from one company to the other](docs/architecture.svg)
+
+## Measured
+
+From the last three full runs, with both real chat apps and real agents:
+
+| | Run 2 | Run 3 | Run 4 |
+| --- | --- | --- | --- |
+| Problem reported to the vendor's approval card, across both companies | 40 s | 60 s | 1 min 58 s |
+| What people did | 2 button presses | 2 button presses | 2 button presses |
+
+In run 4 the last failing quote was at 17:29:41 and quotes were back by 17:29:43, right after the second key.
 
 ## Why it needs Switch
 
@@ -79,7 +92,7 @@ Run `./scripts/lab.sh` again to reset.
 - Harborline and Quillpay are fictional, and the orders API is a small demo service. The people, chat apps, agents, approvals and signatures are real.
 - Both private keys sit on one machine in this demo. In real use each company would hold its own, on its own host.
 - Approval rests on the agent host asking a person before it runs a command, which is why Auto mode has to be off. A determined operator of that host could get around it. The signatures protect the patch, not the host.
-- The full flow has been run live with both real chat apps, but only a few times.
+- The full flow has been run live with both real chat apps four times. That's too few to say how often an agent might need a second try.
 
 ## How it's built
 
