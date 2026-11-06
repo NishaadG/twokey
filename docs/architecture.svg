@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif">
+  <rect width="960" height="400" rx="14" fill="#0c0f12"/>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8b98a5"/></marker>
+  </defs>
+  <g fill="#13181d" stroke="#242c34" stroke-width="1.5">
+    <rect x="30" y="40" width="250" height="210" rx="12"/>
+    <rect x="355" y="40" width="250" height="210" rx="12"/>
+    <rect x="680" y="40" width="250" height="210" rx="12"/>
+    <rect x="245" y="300" width="470" height="76" rx="12" stroke="#f2b13c"/>
+  </g>
+  <g fill="#eef1f3" text-anchor="middle" font-size="19" font-weight="600">
+    <text x="155" y="76">Quillpay (vendor)</text>
+    <text x="480" y="76">Switch</text>
+    <text x="805" y="76">Harborline (customer)</text>
+  </g>
+  <g fill="#8b98a5" text-anchor="middle" font-size="14">
+    <text x="155" y="100">Webex</text>
+    <text x="480" y="100">rooms, links, approvals</text>
+    <text x="805" y="100">self-hosted Rocket.Chat</text>
+    <text x="155" y="146">quillpay-support</text>
+    <text x="155" y="168">writes the patch</text>
+    <text x="805" y="146">harborline-ops</text>
+    <text x="805" y="168">finds the cause</text>
+    <text x="480" y="142">Quillpay Support room</text>
+    <text x="480" y="166">linked to</text>
+    <text x="480" y="190">Harborline Ops room</text>
+  </g>
+  <g fill="#f2b13c" text-anchor="middle" font-size="15" font-weight="600">
+    <text x="155" y="214">Key one: engineer approves</text>
+    <text x="805" y="214">Key two: owner approves</text>
+    <text x="480" y="330">twokey gate</text>
+  </g>
+  <text x="480" y="356" fill="#8b98a5" text-anchor="middle" font-size="14">two Ed25519 signatures over one patch hash, then apply, then ledger</text>
+  <g stroke="#8b98a5" stroke-width="2" fill="none" marker-end="url(#a)" marker-start="url(#a)">
+    <path d="M286 145H349"/>
+    <path d="M674 145H611"/>
+    <path d="M480 256V294"/>
+  </g>
+</svg>

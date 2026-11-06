@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TwoKey</title>
+<style>
+  :root {
+    --bg: #0c0f12; --panel: #13181d; --line: #242c34; --text: #eef1f3; --dim: #8b98a5;
+    --amber: #f2b13c; --green: #3ddc97; --red: #ff5d5d;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--bg); color: var(--text);
+    font: 15px/1.45 "Segoe UI", Inter, system-ui, sans-serif;
+    display: grid; grid-template-rows: auto 1fr auto; gap: 18px; padding: 22px 30px;
+  }
+  header { display: flex; align-items: baseline; gap: 14px; }
+  h1 { margin: 0; font-size: 22px; letter-spacing: .02em; }
+  header p { margin: 0; color: var(--dim); }
+  #change { margin-left: auto; color: var(--dim); font-family: Consolas, monospace; font-size: 13px; }
+  main { display: grid; grid-template-columns: 1fr 300px 1fr; gap: 18px; align-items: stretch; }
+  .lock {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 22px; display: flex; flex-direction: column; align-items: center; text-align: center;
+    transition: border-color .5s;
+  }
+  .lock.turned { border-color: var(--amber); }
+  .company { font-size: 20px; font-weight: 600; }
+  .where { color: var(--dim); font-size: 13px; margin-bottom: 20px; }
+  .cylinder {
+    width: 168px; height: 168px; border-radius: 50%; position: relative; margin: 6px 0 20px;
+    background: radial-gradient(circle at 50% 45%, #2a333c, #171c21 72%);
+    border: 3px solid var(--line); transition: border-color .5s, box-shadow .5s;
+  }
+  .turned .cylinder { border-color: var(--amber); box-shadow: 0 0 34px rgba(242,177,60,.28); }
+  .key {
+    position: absolute; inset: 0; transition: transform 1s cubic-bezier(.3,1.5,.5,1);
+  }
+  .turned .key { transform: rotate(90deg); }
+  .key svg { width: 100%; height: 100%; }
+  .key path, .key circle { fill: var(--dim); transition: fill .5s; }
+  .turned .key path, .turned .key circle { fill: var(--amber); }
+  .label { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+  .turned .label { color: var(--amber); }
+  .by { min-height: 44px; margin-top: 8px; }
+  .by strong { display: block; font-size: 16px; }
+  .by span { color: var(--dim); font-size: 13px; }
+  .centre { display: flex; flex-direction: column; gap: 14px; justify-content: center; text-align: center; }
+  .light {
+    border-radius: 14px; border: 1px solid var(--line); background: var(--panel); padding: 22px 14px;
+    transition: border-color .5s, background .5s;
+  }
+  .light .dot { width: 16px; height: 16px; border-radius: 50%; display: inline-block; background: var(--dim); }
+  .light.down { border-color: var(--red); background: #1e1416; }
+  .light.down .dot { background: var(--red); box-shadow: 0 0 14px var(--red); animation: pulse 1.2s infinite; }
+  .light.up { border-color: var(--green); background: #10201a; }
+  .light.up .dot { background: var(--green); box-shadow: 0 0 14px var(--green); }
+  .light h2 { margin: 8px 0 2px; font-size: 22px; }
+  .light p { margin: 0; color: var(--dim); font-size: 13px; }
+  .summary { color: var(--dim); font-size: 14px; min-height: 42px; }
+  .hash { font-family: Consolas, monospace; font-size: 12px; color: var(--dim); word-break: break-all; }
+  @keyframes pulse { 50% { opacity: .35; } }
+  footer { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; }
+  footer h3 { margin: 0 0 8px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+  #ledger { display: grid; gap: 4px; font-family: Consolas, monospace; font-size: 13px; min-height: 110px; }
+  #ledger div { display: grid; grid-template-columns: 34px 90px 1fr 120px; gap: 12px; }
+  #ledger .t, #ledger .h { color: var(--dim); }
+  #ledger .refused, #ledger .failed { color: var(--red); }
+  #ledger .applied { color: var(--green); }
+  #ledger .key_turned { color: var(--amber); }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>TwoKey</h1>
+  <p>Nothing changes in production until both companies turn their key.</p>
+  <div id="change"></div>
+</header>
+<main>
+  <section class="lock" id="vendor">
+    <div class="company">Quillpay</div>
+    <div class="where">Vendor, on Webex</div>
+    <div class="cylinder"><div class="key"><svg viewBox="0 0 168 168" aria-hidden="true"><circle cx="84" cy="48" r="20"/><path d="M78 62h12v62l-6 8-6-8z"/></svg></div></div>
+    <div class="label">Waiting</div>
+    <div class="by"></div>
+  </section>
+  <section class="centre">
+    <div class="light" id="light"><span class="dot"></span><h2>Checking</h2><p>Harborline orders API</p></div>
+    <div class="summary" id="summary"></div>
+    <div class="hash" id="hash"></div>
+  </section>
+  <section class="lock" id="customer">
+    <div class="company">Harborline</div>
+    <div class="where">Customer, on self-hosted Rocket.Chat</div>
+    <div class="cylinder"><div class="key"><svg viewBox="0 0 168 168" aria-hidden="true"><circle cx="84" cy="48" r="20"/><path d="M78 62h12v62l-6 8-6-8z"/></svg></div></div>
+    <div class="label">Waiting</div>
+    <div class="by"></div>
+  </section>
+</main>
+<footer>
+  <h3>Ledger: each entry carries the hash of the one before it</h3>
+  <div id="ledger"></div>
+</footer>
+<script>
+const text = (element, value) => { element.textContent = value; };
+
+function drawLock(party, change, approval) {
+  const lock = document.getElementById(party);
+  const turned = Boolean(change && change.signatures && change.signatures[party]);
+  lock.classList.toggle("turned", turned);
+  text(lock.querySelector(".label"), turned ? "Key turned" : "Waiting");
+  const by = lock.querySelector(".by");
+  by.replaceChildren();
+  if (turned && approval && approval.name) {
+    const name = document.createElement("strong");
+    text(name, approval.name);
+    const where = document.createElement("span");
+    text(where, approval.platform ? `Approved from ${approval.platform}` : "Approved");
+    by.append(name, where);
+  }
+}
+
+function drawLight(service) {
+  const light = document.getElementById("light");
+  const up = service.status === 200;
+  light.className = "light " + (up ? "up" : "down");
+  text(light.querySelector("h2"), up ? "Quotes working" : service.status ? `Failing: ${service.status}` : "Unreachable");
+}
+
+function drawLedger(entries) {
+  const list = document.getElementById("ledger");
+  list.replaceChildren(...entries.slice(-6).map(entry => {
+    const row = document.createElement("div");
+    const what = entry.event === "key_turned" ? `${entry.party} key turned on ${entry.change}`
+      : entry.event === "proposed" ? `${entry.change} proposed: ${entry.summary}`
+      : entry.event === "applied" ? `${entry.change} applied`
+      : `${entry.event}: ${entry.reason || ""}`;
+    [["t", `#${entry.seq}`], ["t", entry.at.slice(11, 19)], [entry.event, what], ["h", entry.hash.slice(0, 12)]]
+      .forEach(([kind, value]) => {
+        const cell = document.createElement("span");
+        cell.className = kind;
+        text(cell, value);
+        row.append(cell);
+      });
+    return row;
+  }));
+}
+
+async function refresh() {
+  const state = await (await fetch("/api/state")).json();
+  const change = state.change;
+  drawLock("vendor", change, state.approvals.vendor);
+  drawLock("customer", change, state.approvals.customer);
+  drawLight(state.service);
+  drawLedger(state.ledger);
+  text(document.getElementById("change"), change ? `${change.id} / ${change.state}` : "No change open");
+  text(document.getElementById("summary"), change ? change.summary : "");
+  text(document.getElementById("hash"), change ? `patch sha256 ${change.patch_sha256}` : "");
+}
+
+refresh();
+setInterval(refresh, 1000);
+</script>
+</body>
+</html>
