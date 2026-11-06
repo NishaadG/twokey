@@ -6,6 +6,14 @@
 
 **Demo video:** VIDEO_LINK
 
+**Try the gate in a minute, with no chat apps and no accounts:**
+
+```bash
+git clone https://github.com/NishaadG/twokey && cd twokey && ./scripts/try.sh
+```
+
+You play both companies, watch the live board at http://127.0.0.1:8787, and see the gate refuse a tampered patch and catch a rewritten ledger. It needs only `python3`, OpenSSH, `patch` and `curl`. On Windows, run it in WSL.
+
 ## The moment
 
 A vendor's bad release has taken down a customer's orders API. The fix is one line, but the two companies don't share a chat tool. The customer runs self-hosted Rocket.Chat and won't open it to outsiders. The vendor lives in Webex. So the fix crawls through a ticket portal and email, and when it finally lands, nobody can say exactly who approved exactly what.
