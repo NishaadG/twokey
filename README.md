@@ -46,6 +46,17 @@ From the last three full runs, with both real chat apps and real agents:
 
 In run 4 the last failing quote was at 17:29:41 and quotes were back by 17:29:43, right after the second key.
 
+## How Switch is set up
+
+| | Harborline, the customer | Quillpay, the vendor |
+| --- | --- | --- |
+| Chat app | Self-hosted Rocket.Chat | Webex |
+| Channel | A Rocket.Chat channel, with the bot in it | A Webex space, with the bot in it |
+| Switch room | `Harborline Ops`, linked to the other room with the label `vendor` | `Quillpay Support`, linked to the other room with the label `customer` |
+| Agent | `harborline-ops`, working in `~/workspace/twokey-lab/harborline` | `quillpay-support`, working in `~/workspace/twokey-lab/quillpay` |
+
+Both agents are members of both rooms, which a room link needs, and they run through Switch Console on a Linux host. Auto mode is off, so a command that changes something asks a person first. Each agent's instructions are in `agents/`.
+
 ## Why it needs Switch
 
 Take Switch away and the workflow stops. Switch is what provides:
